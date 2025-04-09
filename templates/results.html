@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <title>Результати підбору квартир</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <style>
+        .form-section {
+            max-width: 90%;
+            margin: auto;
+        }
+        table {
+            width: auto;
+            margin: auto;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #ccc;
+            padding: 8px;
+            text-align: center;
+        }
+        th {
+            background-color: #f0f0f0;
+        }
+        h2 {
+            margin-top: 40px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+<div class="form-section">
+    <h1 style="text-align: center;">Результати підбору квартир</h1>
+
+    <h2>Побажання користувача</h2>
+    <table>
+        <tr><th>Критерій</th><th>Значення</th><th>Важливість</th></tr>
+        <tr><td>Ціна</td><td>{{ preferences.price }} $</td><td>{{ convert(preferences.price_fuzzy) }}</td></tr>
+        <tr><td>Площа</td><td>{{ preferences.area }} м²</td><td>{{ convert(preferences.area_fuzzy) }}</td></tr>
+        <tr><td>Кімнати</td><td>{{ preferences.rooms }}</td><td>{{ convert(preferences.rooms_fuzzy) }}</td></tr>
+        <tr><td>Поверх</td><td>{{ preferences.floor }}</td><td>{{ convert(preferences.floor_fuzzy) }}</td></tr>
+        <tr><td>Поверховість</td><td>{{ preferences.floors_total }}</td><td>{{ convert(preferences.floors_total_fuzzy) }}</td></tr>
+        <tr><td>Рік побудови</td><td>{{ preferences.year }}</td><td>{{ convert(preferences.year_fuzzy) }}</td></tr>
+        <tr><td>Відстань</td><td>{{ preferences.distance }} хв</td><td>{{ convert(preferences.distance_fuzzy) }}</td></tr>
+        <tr><td>Район</td><td>{{ preferences.district }}</td><td>{{ convert(preferences.district_fuzzy) }}</td></tr>
+        <tr><td>Тип</td><td>{{ preferences.type }}</td><td>{{ convert(preferences.type_fuzzy) }}</td></tr>
+        <tr><td>Стан</td><td>{{ preferences.condition }}</td><td>{{ convert(preferences.condition_fuzzy) }}</td></tr>
+    </table>
+
+    <h2>Топ-10 рекомендованих квартир</h2>
+    <div style="overflow-x: auto;">
+        <table>
+            <thead>
+            <tr>
+                {% for col in columns %}
+                    <th>{{ display_names.get(col, col) }}</th>
+                {% endfor %}
+            </tr>
+            </thead>
+            <tbody>
+            {% for row in table %}
+                <tr>
+                    {% for col in columns %}
+                        <td>
+                            {% if col == 'Оцінка' %}
+                                {{ '%.2f' % row[col] }}
+                            {% else %}
+                                {{ row[col] }}
+                            {% endif %}
+                        </td>
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+</html>

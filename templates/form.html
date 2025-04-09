@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <title>Вибір квартири</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <style>
+        .form-section {
+            max-width: 700px;
+            margin: auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px #ccc;
+        }
+        label {
+            display: block;
+            margin-top: 15px;
+            font-weight: bold;
+        }
+        input[type=range] {
+            width: 100%;
+        }
+        select, output {
+            margin-top: 5px;
+            margin-bottom: 15px;
+            display: block;
+        }
+        h1 { text-align: center; }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+<div class="form-section">
+    <h1>Ваші побажання до квартири</h1>
+    <form method="post">
+
+        <!-- Повзунки + важливість -->
+        {% for field, label, minv, maxv, step, fuzzy in [
+            ('price', 'Ціна ($)', 10000, 200000, 1000, 'price_fuzzy'),
+            ('area', 'Площа (кв. м)', 20, 200, 1, 'area_fuzzy'),
+            ('rooms', 'Кількість кімнат', 1, 5, 1, 'rooms_fuzzy'),
+            ('floor', 'Поверх', 1, 25, 1, 'floor_fuzzy'),
+            ('floors_total', 'Поверховість будинку', 1, 30, 1, 'floors_total_fuzzy'),
+            ('year', 'Рік побудови', 1950, 2025, 1, 'year_fuzzy'),
+            ('distance', 'Відстань до центру (хв)', 0, 60, 1, 'distance_fuzzy')
+        ] %}
+            <label>{{ label }}</label>
+            <input type="range" name="{{ field }}" min="{{ minv }}" max="{{ maxv }}" step="{{ step }}"
+                   oninput="{{ field }}Val.value = this.value">
+            <output id="{{ field }}Val">{{ minv }}</output>
+            <select name="{{ fuzzy }}">
+                <option>Неважливо</option>
+                <option>Середня важливість</option>
+                <option>Дуже важливо</option>
+            </select>
+        {% endfor %}
+
+        <!-- Район -->
+        <label>Район</label>
+        <select name="district">
+            <option>Соборний</option>
+            <option>Шевченківський</option>
+            <option>Індустріальний</option>
+            <option>Амур-Нижньодніпровський</option>
+            <option>Чечелівський</option>
+            <option>Новокодацький</option>
+            <option>Центральний</option>
+        </select>
+        <select name="district_fuzzy">
+            <option>Неважливо</option>
+            <option>Середня важливість</option>
+            <option>Дуже важливо</option>
+        </select>
+
+        <!-- Тип нерухомості -->
+        <label>Тип нерухомості</label>
+        <select name="type">
+            <option>Новобудова</option>
+            <option>Вторинне житло</option>
+        </select>
+        <select name="type_fuzzy">
+            <option>Неважливо</option>
+            <option>Середня важливість</option>
+            <option>Дуже важливо</option>
+        </select>
+
+        <!-- Стан -->
+        <label>Стан</label>
+        <select name="condition">
+            <option>Без ремонту</option>
+            <option>З ремонтом</option>
+        </select>
+        <select name="condition_fuzzy">
+            <option>Неважливо</option>
+            <option>Середня важливість</option>
+            <option>Дуже важливо</option>
+        </select>
+
+        <br><br>
+        <button type="submit">Підібрати квартири</button>
+    </form>
+</div>
+</body>
+</html>
